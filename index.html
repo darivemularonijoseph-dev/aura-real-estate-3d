@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE AURA RESIDENCES | Ultra-Luxury 3D Architectural Showcase</title>
+    <title>THE AURA RESIDENCES | Ultra-Luxury Architectural Showcase</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,16 +31,6 @@
             }
         }
     </script>
-
-    <!-- Three.js + OrbitControls + Post-Processing Bloom CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 
     <!-- GSAP & ScrollTrigger CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -72,16 +62,17 @@
         }
 
         .glass-panel {
-            background: rgba(11, 14, 20, 0.65);
+            background: rgba(10, 13, 19, 0.65);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.09);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
         }
 
         .glass-pill {
             background: rgba(230, 202, 133, 0.08);
             backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border: 1px solid rgba(230, 202, 133, 0.25);
         }
 
@@ -109,14 +100,24 @@
             width: 100%;
         }
 
-        /* 3D Hotspot pulse animation */
-        @keyframes pulse-ring {
-            0% { transform: scale(0.9); opacity: 0.8; }
-            50% { transform: scale(1.4); opacity: 0.2; }
-            100% { transform: scale(0.9); opacity: 0.8; }
+        /* Cinematic Atmospheric Lighting Presets */
+        .grade-dusk {
+            filter: contrast(1.08) saturate(1.1) brightness(0.92);
         }
-        .hotspot-pulse {
-            animation: pulse-ring 2s infinite ease-in-out;
+        .grade-night {
+            filter: contrast(1.2) saturate(0.85) brightness(0.65) hue-rotate(15deg);
+        }
+        .grade-golden {
+            filter: contrast(1.12) saturate(1.3) brightness(1.0) sepia(0.18);
+        }
+
+        /* Ambient Glow Pulse */
+        @keyframes subtle-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-float {
+            animation: subtle-float 6s ease-in-out infinite;
         }
 
         input[type=range] {
@@ -161,19 +162,19 @@
             <a href="#inquire" class="nav-link hover:text-champagne transition-colors">VIP Inquire</a>
         </div>
 
-        <!-- Controls: Time of Day & 3D Orbit Mode -->
+        <!-- Controls: Atmosphere & VIP Modal Trigger -->
         <div class="flex items-center gap-3">
-            <!-- Lighting Preset Switcher -->
+            <!-- Lighting Grade Switcher -->
             <div class="hidden lg:flex items-center gap-1.5 glass-panel p-1 rounded-full text-[11px] tracking-wider uppercase border border-white/10">
-                <button id="btn-light-dusk" class="px-3 py-1 rounded-full bg-gold/20 text-champagne font-medium transition-all" onclick="setTimeOfDay('dusk')">Dusk</button>
-                <button id="btn-light-night" class="px-3 py-1 rounded-full text-white/60 hover:text-white transition-all" onclick="setTimeOfDay('night')">Midnight</button>
-                <button id="btn-light-golden" class="px-3 py-1 rounded-full text-white/60 hover:text-white transition-all" onclick="setTimeOfDay('golden')">Golden</button>
+                <button id="btn-grade-dusk" class="px-3 py-1 rounded-full bg-gold/20 text-champagne font-medium transition-all" onclick="setAtmosphere('dusk')">Dusk</button>
+                <button id="btn-grade-night" class="px-3 py-1 rounded-full text-white/60 hover:text-white transition-all" onclick="setAtmosphere('night')">Midnight</button>
+                <button id="btn-grade-golden" class="px-3 py-1 rounded-full text-white/60 hover:text-white transition-all" onclick="setAtmosphere('golden')">Golden</button>
             </div>
 
-            <!-- Free 3D Orbit Toggle -->
-            <button id="btn-orbit-toggle" class="flex items-center gap-2 px-4 py-2 rounded-full text-xs uppercase tracking-widest bg-white/10 hover:bg-gold hover:text-obsidian transition-all border border-white/20">
-                <i data-lucide="orbit" class="w-4 h-4"></i>
-                <span id="orbit-btn-text" class="hidden sm:inline">3D Free Orbit</span>
+            <!-- Video Tour Trigger Button -->
+            <button onclick="openVideoTour()" class="flex items-center gap-2 px-4 py-2 rounded-full text-xs uppercase tracking-widest bg-white/10 hover:bg-gold hover:text-obsidian transition-all border border-white/20">
+                <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+                <span class="hidden sm:inline">Drone Tour</span>
             </button>
 
             <!-- Mobile Hamburger -->
@@ -184,7 +185,7 @@
     </header>
 
     <!-- Mobile Drawer Menu -->
-    <div id="mobile-menu" class="fixed inset-0 bg-obsidian/95 backdrop-blur-2xl z-40 flex flex-col justify-center items-center gap-8 text-lg uppercase tracking-[0.25em] hidden transition-all">
+    <div id="mobile-menu" class="fixed inset-0 bg-obsidian/95 backdrop-blur-2xl z-50 flex flex-col justify-center items-center gap-8 text-lg uppercase tracking-[0.25em] hidden transition-all">
         <a href="#residence" class="mobile-link text-white/80 hover:text-gold">Residence</a>
         <a href="#amenities" class="mobile-link text-white/80 hover:text-gold">Amenities</a>
         <a href="#investment" class="mobile-link text-white/80 hover:text-gold">Acquisition</a>
@@ -194,145 +195,162 @@
         </button>
     </div>
 
-    <!-- 3D Canvas Background -->
-    <canvas id="webgl-canvas" class="fixed inset-0 w-full h-full z-0"></canvas>
-
-    <!-- 3D Interactive Hotspot Overlays (Click to Zoom) -->
-    <div id="hotspots-layer" class="fixed inset-0 pointer-events-none z-10 transition-opacity duration-500">
-        <!-- Hotspot: Infinity Lagoon -->
-        <div id="hotspot-pool" class="absolute pointer-events-auto cursor-pointer group hidden" onclick="zoomToFeature('pool')">
-            <div class="relative flex items-center gap-2">
-                <div class="w-7 h-7 rounded-full bg-gold/20 border border-gold flex items-center justify-center relative">
-                    <div class="w-2.5 h-2.5 rounded-full bg-gold"></div>
-                    <div class="absolute inset-0 rounded-full border border-gold hotspot-pulse"></div>
-                </div>
-                <div class="glass-panel px-3 py-1.5 rounded-lg text-xs tracking-wider uppercase text-white/90 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                    Infinity Lagoon & Fire Lounge
-                </div>
-            </div>
-        </div>
-
-        <!-- Hotspot: Cantilever Suite -->
-        <div id="hotspot-cantilever" class="absolute pointer-events-auto cursor-pointer group hidden" onclick="zoomToFeature('cantilever')">
-            <div class="relative flex items-center gap-2">
-                <div class="w-7 h-7 rounded-full bg-gold/20 border border-gold flex items-center justify-center relative">
-                    <div class="w-2.5 h-2.5 rounded-full bg-gold"></div>
-                    <div class="absolute inset-0 rounded-full border border-gold hotspot-pulse"></div>
-                </div>
-                <div class="glass-panel px-3 py-1.5 rounded-lg text-xs tracking-wider uppercase text-white/90 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                    Cantilever Master Penthouse
-                </div>
-            </div>
-        </div>
-
-        <!-- Hotspot: Sky Deck -->
-        <div id="hotspot-roof" class="absolute pointer-events-auto cursor-pointer group hidden" onclick="zoomToFeature('roof')">
-            <div class="relative flex items-center gap-2">
-                <div class="w-7 h-7 rounded-full bg-gold/20 border border-gold flex items-center justify-center relative">
-                    <div class="w-2.5 h-2.5 rounded-full bg-gold"></div>
-                    <div class="absolute inset-0 rounded-full border border-gold hotspot-pulse"></div>
-                </div>
-                <div class="glass-panel px-3 py-1.5 rounded-lg text-xs tracking-wider uppercase text-white/90 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                    Sunset Sky Observatory
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Free Orbit Notice Banner (Visible when Free Orbit Mode is Active) -->
-    <div id="orbit-banner" class="fixed top-24 left-1/2 -translate-x-1/2 z-30 glass-panel px-6 py-2.5 rounded-full text-xs uppercase tracking-widest text-champagne border border-gold/40 hidden flex items-center gap-3">
-        <i data-lucide="hand" class="w-4 h-4 animate-bounce"></i>
-        <span>Free 3D Inspection Mode: Click & Drag to Rotate • Scroll to Zoom</span>
-        <button onclick="toggleOrbitMode()" class="ml-2 underline text-white hover:text-gold">Exit</button>
-    </div>
-
-    <!-- Scrollytelling 3D Experience Track -->
-    <div id="scroll-track" class="relative w-full z-10" style="height: 400vh;">
+    <!-- ======================================================== -->
+    <!-- CINEMATIC SCROLLYTELLING CONTAINER (APPLE / SOTHEBY'S STYLE) -->
+    <!-- ======================================================== -->
+    <div id="scroll-track" class="relative w-full" style="height: 420vh;">
         
-        <!-- Scene 1: Hero -->
-        <section class="scene-section sticky top-0 h-screen w-full flex flex-col justify-center items-center px-6 pointer-events-none">
-            <div class="text-center mt-14 max-w-4xl">
-                <div class="inline-block glass-pill px-5 py-1.5 rounded-full text-champagne tracking-[0.35em] text-xs uppercase mb-6 opacity-0 translate-y-4" id="hero-subtitle">
-                    Architectural Masterpiece • Jubilee Hills
-                </div>
-                <h1 class="font-serif text-5xl md:text-8xl lg:text-9xl font-bold text-white mb-6 tracking-tight opacity-0 translate-y-8" id="hero-title">
-                    THE AURA
-                </h1>
-                
-                <div class="glass-panel inline-flex flex-wrap justify-center items-center gap-3 md:gap-7 px-6 py-3.5 rounded-full text-xs md:text-sm tracking-widest uppercase text-white/90 opacity-0" id="hero-specs">
-                    <span>8,800 SQ FT</span>
-                    <span class="text-gold">•</span>
-                    <span>5 Master Suites</span>
-                    <span class="text-gold">•</span>
-                    <span>Infinity Lagoon Pool</span>
-                    <span class="text-gold">•</span>
-                    <span class="text-gradient-gold font-bold text-sm md:text-base">$14.2M</span>
-                </div>
-            </div>
+        <!-- Sticky Fullscreen Viewport -->
+        <div class="sticky top-0 h-screen w-full overflow-hidden">
             
-            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-0 cursor-pointer pointer-events-auto" id="hero-scroll" onclick="window.scrollTo({top: window.innerHeight * 0.9, behavior: 'smooth'})">
-                <span class="text-[10px] tracking-[0.3em] uppercase text-white/50 hover:text-champagne transition-colors">Scroll to Inspect 3D Architecture</span>
-                <div class="w-[1px] h-10 bg-gradient-to-b from-champagne to-transparent animate-pulse"></div>
-            </div>
-        </section>
+            <!-- Background Image Layers (Ultra-High Resolution 4K Architecture) -->
+            <div id="visual-viewport" class="absolute inset-0 w-full h-full grade-dusk transition-all duration-700">
+                
+                <!-- Scene 1: Twilight Estate Exterior & Lagoon (Hero) -->
+                <div id="layer-hero" class="absolute inset-0 w-full h-full bg-cover bg-center origin-center transition-transform will-change-transform"
+                     style="background-image: url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=85&w=2560&auto=format&fit=crop');">
+                    <div class="absolute inset-0 bg-gradient-to-t from-obsidian via-black/30 to-black/60"></div>
+                </div>
 
-        <!-- Scene 2: Cantilever Architecture -->
-        <section class="scene-section absolute top-[100vh] h-screen w-full flex items-center px-6 md:px-20 pointer-events-none">
-            <div class="glass-panel p-8 md:p-12 rounded-3xl max-w-xl opacity-0 translate-x-[-60px] pointer-events-auto" id="card-arch">
-                <div class="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center mb-6 border border-gold/30">
-                    <i data-lucide="layers" class="text-champagne w-6 h-6"></i>
+                <!-- Scene 2: Cantilever Terrace & Infinity Reflection -->
+                <div id="layer-arch" class="absolute inset-0 w-full h-full bg-cover bg-center origin-center opacity-0 will-change-transform"
+                     style="background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=85&w=2560&auto=format&fit=crop');">
+                    <div class="absolute inset-0 bg-gradient-to-r from-obsidian/90 via-black/40 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-obsidian via-transparent to-black/40"></div>
                 </div>
-                <p class="text-champagne uppercase tracking-[0.25em] text-xs font-semibold mb-2">Phase I • Structural Form</p>
-                <h2 class="font-serif text-3xl md:text-4xl mb-4 text-white font-medium">Cantilevered Horizon</h2>
-                <p class="text-white/70 leading-relaxed font-light text-sm md:text-base mb-6">
-                    Frameless floor-to-ceiling thermal glass with automated climate modulation. Floating concrete volumes balance weightlessly above reflective waters, seamlessly uniting interior luxury with panoramic skyline views.
-                </p>
-                <div class="flex items-center gap-6 text-xs tracking-wider uppercase text-champagne/90">
-                    <div><span class="font-bold text-white text-base">3.4m</span> Ceiling Height</div>
-                    <div class="w-[1px] h-4 bg-white/20"></div>
-                    <div><span class="font-bold text-white text-base">Triple</span> Glazed Thermal Glass</div>
-                </div>
-            </div>
-        </section>
 
-        <!-- Scene 3: The Sanctuary & Interior -->
-        <section class="scene-section absolute top-[200vh] h-screen w-full flex items-center justify-end px-6 md:px-20 pointer-events-none">
-            <div class="glass-panel p-8 md:p-12 rounded-3xl max-w-xl opacity-0 translate-x-[60px] pointer-events-auto" id="card-interior">
-                <div class="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center mb-6 border border-gold/30">
-                    <i data-lucide="sparkles" class="text-champagne w-6 h-6"></i>
+                <!-- Scene 3: The Sanctuary (Italian Travertine & Interior Salon) -->
+                <div id="layer-interior" class="absolute inset-0 w-full h-full bg-cover bg-center origin-center opacity-0 will-change-transform"
+                     style="background-image: url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=85&w=2560&auto=format&fit=crop');">
+                    <div class="absolute inset-0 bg-gradient-to-l from-obsidian/90 via-black/40 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-obsidian via-transparent to-black/50"></div>
                 </div>
-                <p class="text-champagne uppercase tracking-[0.25em] text-xs font-semibold mb-2">Phase II • Living Art</p>
-                <h2 class="font-serif text-3xl md:text-4xl mb-4 text-white font-medium">The Inner Sanctuary</h2>
-                <p class="text-white/70 leading-relaxed font-light text-sm md:text-base mb-6">
-                    Hand-selected Italian Travertine and polished Calacatta Gold marble crafted by master European stonemasons. Warm architectural cove lighting highlights natural textures to compose an effortless retreat of calm.
-                </p>
-                <div class="flex items-center gap-6 text-xs tracking-wider uppercase text-champagne/90">
-                    <div><span class="font-bold text-white text-base">Bookmatched</span> Italian Slabs</div>
-                    <div class="w-[1px] h-4 bg-white/20"></div>
-                    <div><span class="font-bold text-white text-base">Smart</span> Acoustic Isolation</div>
-                </div>
-            </div>
-        </section>
 
-        <!-- Scene 4: Sky Deck & Skyline -->
-        <section class="scene-section absolute top-[300vh] h-screen w-full flex items-start justify-center pt-28 px-6 pointer-events-none">
-            <div class="glass-panel p-8 md:p-12 rounded-3xl max-w-2xl text-center opacity-0 translate-y-[-60px] pointer-events-auto" id="card-roof">
-                <div class="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center mx-auto mb-5 border border-gold/30">
-                    <i data-lucide="sun" class="text-champagne w-6 h-6"></i>
+                <!-- Scene 4: Rooftop Sky Deck & Panoramic Sunset Horizon -->
+                <div id="layer-roof" class="absolute inset-0 w-full h-full bg-cover bg-center origin-center opacity-0 will-change-transform"
+                     style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=85&w=2560&auto=format&fit=crop');">
+                    <div class="absolute inset-0 bg-gradient-to-t from-obsidian via-black/25 to-black/60"></div>
                 </div>
-                <p class="text-champagne uppercase tracking-[0.25em] text-xs font-semibold mb-2">Phase III • Sky Deck</p>
-                <h2 class="font-serif text-3xl md:text-5xl mb-4 text-white font-medium">Private Sunset Observatory</h2>
-                <p class="text-white/70 leading-relaxed font-light text-sm md:text-base max-w-lg mx-auto mb-6">
-                    360° unobstructed horizon panoramas accompanied by a bespoke outdoor fire lounge, sub-zero bar, and private rooftop star observatory.
-                </p>
-                <a href="#inquire" class="inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs uppercase tracking-widest bg-gold text-obsidian font-semibold hover:bg-champagne transition-all shadow-lg shadow-gold/20">
-                    Schedule Private Showing <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </a>
             </div>
-        </section>
+
+            <!-- Ambient Floating Gold Particle Canvas Overlay -->
+            <canvas id="ambient-particles" class="absolute inset-0 w-full h-full pointer-events-none z-10 opacity-70"></canvas>
+
+            <!-- Floating Scrollytelling Progress Bar Indicator -->
+            <div class="absolute top-28 left-6 md:left-12 z-20 hidden sm:flex items-center gap-3 glass-pill px-4 py-2 rounded-full text-[10px] tracking-[0.25em] uppercase">
+                <span id="step-01" class="text-champagne font-bold transition-all">01 Façade</span>
+                <span class="text-white/20">•</span>
+                <span id="step-02" class="text-white/40 transition-all">02 Terrace</span>
+                <span class="text-white/20">•</span>
+                <span id="step-03" class="text-white/40 transition-all">03 Sanctuary</span>
+                <span class="text-white/20">•</span>
+                <span id="step-04" class="text-white/40 transition-all">04 Sky Deck</span>
+            </div>
+
+            <!-- UI Overlay Content (Scrollytelling Scenes) -->
+            <div class="relative z-20 h-full w-full pointer-events-none">
+                
+                <!-- Scene 1: Hero Centered Display -->
+                <div id="content-hero" class="absolute inset-0 flex flex-col justify-center items-center px-6 text-center">
+                    <div class="max-w-4xl">
+                        <div class="inline-block glass-pill px-5 py-1.5 rounded-full text-champagne tracking-[0.35em] text-xs uppercase mb-6 opacity-0 translate-y-4" id="hero-subtitle">
+                            Architectural Masterpiece • Jubilee Hills
+                        </div>
+                        <h1 class="font-serif text-5xl md:text-8xl lg:text-9xl font-bold text-white mb-6 tracking-tight opacity-0 translate-y-8" id="hero-title">
+                            THE AURA
+                        </h1>
+                        
+                        <div class="glass-panel inline-flex flex-wrap justify-center items-center gap-3 md:gap-7 px-6 py-3.5 rounded-full text-xs md:text-sm tracking-widest uppercase text-white/90 opacity-0" id="hero-specs">
+                            <span>8,800 SQ FT</span>
+                            <span class="text-gold">•</span>
+                            <span>5 Master Suites</span>
+                            <span class="text-gold">•</span>
+                            <span>Infinity Lagoon Pool</span>
+                            <span class="text-gold">•</span>
+                            <span class="text-gradient-gold font-bold text-sm md:text-base">$14.2M</span>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-0 cursor-pointer pointer-events-auto" id="hero-scroll" onclick="jumpToScene(1)">
+                        <span class="text-[10px] tracking-[0.3em] uppercase text-white/50 hover:text-champagne transition-colors">Scroll to Enter Residence</span>
+                        <div class="w-[1px] h-10 bg-gradient-to-b from-champagne to-transparent animate-pulse"></div>
+                    </div>
+                </div>
+
+                <!-- Scene 2: Cantilever Architecture Card -->
+                <div id="content-arch" class="absolute inset-0 flex items-center px-6 md:px-20 pointer-events-none opacity-0">
+                    <div class="glass-panel p-8 md:p-12 rounded-3xl max-w-xl translate-x-[-60px] pointer-events-auto" id="card-arch-inner">
+                        <div class="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center mb-6 border border-gold/30">
+                            <i data-lucide="layers" class="text-champagne w-6 h-6"></i>
+                        </div>
+                        <p class="text-champagne uppercase tracking-[0.25em] text-xs font-semibold mb-2">Phase I • Structural Form</p>
+                        <h2 class="font-serif text-3xl md:text-4xl mb-4 text-white font-medium">Cantilevered Horizon</h2>
+                        <p class="text-white/70 leading-relaxed font-light text-sm md:text-base mb-6">
+                            Frameless floor-to-ceiling thermal glass with automated climate modulation. Floating concrete volumes balance weightlessly above reflective waters, seamlessly uniting interior luxury with panoramic skyline views.
+                        </p>
+                        <div class="flex items-center gap-6 text-xs tracking-wider uppercase text-champagne/90">
+                            <div><span class="font-bold text-white text-base">3.4m</span> Ceiling Height</div>
+                            <div class="w-[1px] h-4 bg-white/20"></div>
+                            <div><span class="font-bold text-white text-base">Triple</span> Glazed Thermal Glass</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scene 3: The Sanctuary & Interior Card -->
+                <div id="content-interior" class="absolute inset-0 flex items-center justify-end px-6 md:px-20 pointer-events-none opacity-0">
+                    <div class="glass-panel p-8 md:p-12 rounded-3xl max-w-xl translate-x-[60px] pointer-events-auto" id="card-interior-inner">
+                        <div class="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center mb-6 border border-gold/30">
+                            <i data-lucide="sparkles" class="text-champagne w-6 h-6"></i>
+                        </div>
+                        <p class="text-champagne uppercase tracking-[0.25em] text-xs font-semibold mb-2">Phase II • Living Art</p>
+                        <h2 class="font-serif text-3xl md:text-4xl mb-4 text-white font-medium">The Inner Sanctuary</h2>
+                        <p class="text-white/70 leading-relaxed font-light text-sm md:text-base mb-6">
+                            Hand-selected Italian Travertine and polished Calacatta Gold marble crafted by master European stonemasons. Warm architectural cove lighting highlights natural textures to compose an effortless retreat of calm.
+                        </p>
+                        <div class="flex items-center gap-6 text-xs tracking-wider uppercase text-champagne/90">
+                            <div><span class="font-bold text-white text-base">Bookmatched</span> Italian Slabs</div>
+                            <div class="w-[1px] h-4 bg-white/20"></div>
+                            <div><span class="font-bold text-white text-base">Smart</span> Acoustic Isolation</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scene 4: Sky Deck & Skyline Card -->
+                <div id="content-roof" class="absolute inset-0 flex items-start justify-center pt-28 px-6 pointer-events-none opacity-0">
+                    <div class="glass-panel p-8 md:p-12 rounded-3xl max-w-2xl text-center translate-y-[-60px] pointer-events-auto" id="card-roof-inner">
+                        <div class="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center mx-auto mb-5 border border-gold/30">
+                            <i data-lucide="sun" class="text-champagne w-6 h-6"></i>
+                        </div>
+                        <p class="text-champagne uppercase tracking-[0.25em] text-xs font-semibold mb-2">Phase III • Sky Deck</p>
+                        <h2 class="font-serif text-3xl md:text-5xl mb-4 text-white font-medium">Private Sunset Observatory</h2>
+                        <p class="text-white/70 leading-relaxed font-light text-sm md:text-base max-w-lg mx-auto mb-6">
+                            360° unobstructed horizon panoramas accompanied by a bespoke outdoor fire lounge, sub-zero bar, and private rooftop star observatory.
+                        </p>
+                        <a href="#inquire" class="inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs uppercase tracking-widest bg-gold text-obsidian font-semibold hover:bg-champagne transition-all shadow-lg shadow-gold/20">
+                            Schedule Private Showing <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Quick Jump Scene Navigation (Bottom Center) -->
+            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 glass-panel px-4 py-2 rounded-full hidden md:flex items-center gap-2 border border-white/10">
+                <button onclick="jumpToScene(0)" class="px-3 py-1 rounded-full text-xs text-white/60 hover:text-champagne transition-colors">Façade</button>
+                <div class="w-[1px] h-3 bg-white/20"></div>
+                <button onclick="jumpToScene(1)" class="px-3 py-1 rounded-full text-xs text-white/60 hover:text-champagne transition-colors">Terrace</button>
+                <div class="w-[1px] h-3 bg-white/20"></div>
+                <button onclick="jumpToScene(2)" class="px-3 py-1 rounded-full text-xs text-white/60 hover:text-champagne transition-colors">Sanctuary</button>
+                <div class="w-[1px] h-3 bg-white/20"></div>
+                <button onclick="jumpToScene(3)" class="px-3 py-1 rounded-full text-xs text-white/60 hover:text-champagne transition-colors">Sky Deck</button>
+            </div>
+
+        </div>
     </div>
 
-    <!-- Main Content Section Below 3D Showcase -->
+    <!-- ======================================================== -->
+    <!-- MAIN CONTENT SECTIONS BELOW CINEMATIC SCROLL -->
+    <!-- ======================================================== -->
     <main class="relative z-20 bg-obsidian w-full" id="residence">
         
         <!-- Smooth Dark Gradient Transition -->
@@ -512,6 +530,16 @@
         </div>
     </div>
 
+    <!-- 4K Drone Tour Modal -->
+    <div id="modal-tour" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-2xl flex items-center justify-center p-4 md:p-10 hidden">
+        <div class="relative w-full max-w-5xl aspect-video glass-panel rounded-3xl overflow-hidden border border-white/20">
+            <button onclick="closeVideoTour()" class="absolute top-4 right-4 z-20 text-white/80 hover:text-white bg-black/50 p-2 rounded-full">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <iframe id="tour-iframe" class="w-full h-full" src="" title="Luxury Villa Tour" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+
     <script>
         // Initialize Lucide Icons
         lucide.createIcons();
@@ -543,612 +571,160 @@
             modalSuccess.classList.add('hidden');
         });
 
-        // ==========================================
-        // THREE.JS ARCHITECTURAL 3D EXPERIENCE
-        // ==========================================
-        const canvas = document.querySelector('#webgl-canvas');
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color('#060709');
-        scene.fog = new THREE.FogExp2('#060709', 0.016);
-
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 4, 38);
-
-        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: "high-performance" });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.35;
-
-        // --- OrbitControls for Interactive Free 3D Mode ---
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-        controls.maxPolarAngle = Math.PI / 2 - 0.02; // Don't go below ground
-        controls.minDistance = 10;
-        controls.maxDistance = 65;
-        controls.enabled = false; // Disabled by default during scroll mode
-
-        let isOrbitMode = false;
-        function toggleOrbitMode() {
-            isOrbitMode = !isOrbitMode;
-            controls.enabled = isOrbitMode;
-            document.getElementById('orbit-banner').classList.toggle('hidden', !isOrbitMode);
-            document.getElementById('orbit-btn-text').innerText = isOrbitMode ? "Exit 3D Orbit" : "3D Free Orbit";
-            if (!isOrbitMode) {
-                // Re-sync with current scroll position
-                ScrollTrigger.refresh();
-            }
+        // Drone Tour Modal
+        const modalTour = document.getElementById('modal-tour');
+        const tourIframe = document.getElementById('tour-iframe');
+        function openVideoTour() {
+            // High-end 4K architectural drone tour preview
+            tourIframe.src = "https://www.youtube-nocookie.com/embed/Z0qB3iK6Yps?autoplay=1&rel=0&modestbranding=1";
+            modalTour.classList.remove('hidden');
         }
-        document.getElementById('btn-orbit-toggle').addEventListener('click', toggleOrbitMode);
+        function closeVideoTour() {
+            tourIframe.src = "";
+            modalTour.classList.add('hidden');
+        }
 
-        // --- Post-Processing: Unreal Bloom Effect ---
-        const renderScene = new THREE.RenderPass(scene, camera);
-        const bloomPass = new THREE.UnrealBloomPass(
-            new THREE.Vector2(window.innerWidth, window.innerHeight),
-            0.65, // strength
-            0.4,  // radius
-            0.4   // threshold
-        );
-
-        const composer = new THREE.EffectComposer(renderer);
-        composer.addPass(renderScene);
-        composer.addPass(bloomPass);
-
-        // --- Dynamic Lighting Presets ---
-        const ambientLight = new THREE.AmbientLight('#ffffff', 0.25);
-        scene.add(ambientLight);
-
-        const sunLight = new THREE.DirectionalLight('#A5C9CA', 1.2);
-        sunLight.position.set(-30, 45, 25);
-        sunLight.castShadow = true;
-        sunLight.shadow.mapSize.width = 2048;
-        sunLight.shadow.mapSize.height = 2048;
-        sunLight.shadow.bias = -0.0005;
-        scene.add(sunLight);
-
-        const warmFillLight = new THREE.DirectionalLight('#E6CA85', 0.5);
-        warmFillLight.position.set(25, 15, -20);
-        scene.add(warmFillLight);
-
-        // Interior & Accent Lights Group
-        const interiorLights = [];
-
-        function setTimeOfDay(preset) {
-            document.querySelectorAll('#btn-light-dusk, #btn-light-night, #btn-light-golden').forEach(b => {
+        // Atmosphere Lighting Presets (CSS Cinematic Filters)
+        const visualViewport = document.getElementById('visual-viewport');
+        function setAtmosphere(mode) {
+            document.querySelectorAll('#btn-grade-dusk, #btn-grade-night, #btn-grade-golden').forEach(b => {
                 b.classList.remove('bg-gold/20', 'text-champagne', 'font-medium');
                 b.classList.add('text-white/60');
             });
 
-            if (preset === 'dusk') {
-                document.getElementById('btn-light-dusk').classList.add('bg-gold/20', 'text-champagne', 'font-medium');
-                scene.background.set('#060709');
-                scene.fog.color.set('#060709');
-                ambientLight.color.set('#ffffff');
-                ambientLight.intensity = 0.25;
-                sunLight.color.set('#A5C9CA');
-                sunLight.intensity = 1.2;
-                warmFillLight.color.set('#E6CA85');
-                warmFillLight.intensity = 0.5;
-                bloomPass.strength = 0.65;
-            } else if (preset === 'night') {
-                document.getElementById('btn-light-night').classList.add('bg-gold/20', 'text-champagne', 'font-medium');
-                scene.background.set('#030406');
-                scene.fog.color.set('#030406');
-                ambientLight.intensity = 0.1;
-                sunLight.color.set('#4B6584');
-                sunLight.intensity = 0.6;
-                warmFillLight.intensity = 0.2;
-                bloomPass.strength = 1.1; // Deep night bloom
-            } else if (preset === 'golden') {
-                document.getElementById('btn-light-golden').classList.add('bg-gold/20', 'text-champagne', 'font-medium');
-                scene.background.set('#120D0A');
-                scene.fog.color.set('#120D0A');
-                ambientLight.intensity = 0.4;
-                sunLight.color.set('#FFA726');
-                sunLight.intensity = 2.0;
-                warmFillLight.color.set('#FF7043');
-                warmFillLight.intensity = 0.8;
-                bloomPass.strength = 0.5;
+            visualViewport.classList.remove('grade-dusk', 'grade-night', 'grade-golden');
+            if (mode === 'dusk') {
+                document.getElementById('btn-grade-dusk').classList.add('bg-gold/20', 'text-champagne', 'font-medium');
+                visualViewport.classList.add('grade-dusk');
+            } else if (mode === 'night') {
+                document.getElementById('btn-grade-night').classList.add('bg-gold/20', 'text-champagne', 'font-medium');
+                visualViewport.classList.add('grade-night');
+            } else if (mode === 'golden') {
+                document.getElementById('btn-grade-golden').classList.add('bg-gold/20', 'text-champagne', 'font-medium');
+                visualViewport.classList.add('grade-golden');
             }
         }
 
         // ==========================================
-        // HIGH-FIDELITY LUXURY VILLA ARCHITECTURE
+        // AMBIENT GOLD DUST PARTICLES (CANVAS OVERLAY)
         // ==========================================
-        const villaGroup = new THREE.Group();
-        scene.add(villaGroup);
+        const pCanvas = document.getElementById('ambient-particles');
+        const pCtx = pCanvas.getContext('2d');
+        let pWidth, pHeight;
+        const particles = [];
+        const numParticles = 45;
 
-        // PBR Materials
-        const darkGraniteMat = new THREE.MeshStandardMaterial({ 
-            color: '#15181F', 
-            roughness: 0.85, 
-            metalness: 0.2 
-        });
-        
-        const whiteTravertineMat = new THREE.MeshStandardMaterial({
-            color: '#D8D3C8',
-            roughness: 0.35,
-            metalness: 0.1
-        });
+        function resizePCanvas() {
+            pWidth = pCanvas.width = window.innerWidth;
+            pHeight = pCanvas.height = window.innerHeight;
+        }
+        resizePCanvas();
+        window.addEventListener('resize', resizePCanvas);
 
-        const darkConcreteMat = new THREE.MeshStandardMaterial({
-            color: '#1C2029',
-            roughness: 0.7,
-            metalness: 0.15
-        });
-
-        const naturalWoodMat = new THREE.MeshStandardMaterial({
-            color: '#523A28',
-            roughness: 0.55,
-            metalness: 0.05
-        });
-
-        const brassGoldMat = new THREE.MeshStandardMaterial({
-            color: '#D4AF37',
-            roughness: 0.25,
-            metalness: 0.85
-        });
-
-        const tintedGlassMat = new THREE.MeshPhysicalMaterial({
-            color: '#ffffff',
-            metalness: 0.1,
-            roughness: 0.04,
-            transmission: 0.92,
-            ior: 1.52,
-            thickness: 0.8,
-            transparent: true,
-            opacity: 1
-        });
-
-        const waterLagoonMat = new THREE.MeshStandardMaterial({
-            color: '#083344',
-            roughness: 0.04,
-            metalness: 0.85
-        });
-
-        const grassMat = new THREE.MeshStandardMaterial({
-            color: '#0D1A10',
-            roughness: 0.9
-        });
-
-        const glowEmissionMat = new THREE.MeshBasicMaterial({
-            color: '#FFF2C6'
-        });
-
-        function buildArchitecturalShowcase() {
-            // 1. Estate Ground Landscape with Tiered Lawn & Perimeter Hedges
-            const ground = new THREE.Mesh(new THREE.PlaneGeometry(160, 160), new THREE.MeshStandardMaterial({ color: '#040507', roughness: 0.95 }));
-            ground.rotation.x = -Math.PI / 2;
-            ground.position.y = -0.55;
-            ground.receiveShadow = true;
-            scene.add(ground);
-
-            // Manicured Grass Lawn Terraces
-            const lawnLeft = new THREE.Mesh(new THREE.BoxGeometry(22, 0.4, 30), grassMat);
-            lawnLeft.position.set(-20, -0.3, 5);
-            lawnLeft.receiveShadow = true;
-            villaGroup.add(lawnLeft);
-
-            const lawnRight = new THREE.Mesh(new THREE.BoxGeometry(20, 0.4, 25), grassMat);
-            lawnRight.position.set(21, -0.3, 10);
-            lawnRight.receiveShadow = true;
-            villaGroup.add(lawnRight);
-
-            // Perimeter Boundary Wall / Privacy Hedge
-            const backHedge = new THREE.Mesh(new THREE.BoxGeometry(70, 3.5, 1.2), darkGraniteMat);
-            backHedge.position.set(0, 1.2, -14);
-            backHedge.castShadow = true;
-            villaGroup.add(backHedge);
-
-            // 2. Travertine Stepping Path & Driveway
-            for(let i = 0; i < 7; i++) {
-                const paver = new THREE.Mesh(new THREE.BoxGeometry(3.5, 0.15, 1.8), whiteTravertineMat);
-                paver.position.set(-6, -0.2, 10 + i * 2.8);
-                paver.receiveShadow = true;
-                villaGroup.add(paver);
-            }
-
-            // 3. Villa Main Foundation & Travertine Terrace Podium
-            const podium = new THREE.Mesh(new THREE.BoxGeometry(32, 1.2, 24), darkGraniteMat);
-            podium.position.set(0, 0.05, 0);
-            podium.receiveShadow = true;
-            podium.castShadow = true;
-            villaGroup.add(podium);
-
-            // 4. Infinity Lagoon Pool with Sunken Lounge
-            const pool = new THREE.Mesh(new THREE.BoxGeometry(16, 0.8, 10), waterLagoonMat);
-            pool.position.set(2, 0.35, 13);
-            pool.receiveShadow = true;
-            villaGroup.add(pool);
-
-            const poolBorder = new THREE.Mesh(new THREE.BoxGeometry(16.6, 0.2, 10.6), brassGoldMat);
-            poolBorder.position.set(2, 0.45, 13);
-            villaGroup.add(poolBorder);
-
-            // Sunken Conversation Fire Pit in Pool Area
-            const firePitDeck = new THREE.Mesh(new THREE.BoxGeometry(5.5, 0.6, 5.5), whiteTravertineMat);
-            firePitDeck.position.set(13, 0.35, 13);
-            firePitDeck.receiveShadow = true;
-            villaGroup.add(firePitDeck);
-
-            const firePitCutout = new THREE.Mesh(new THREE.BoxGeometry(2, 0.3, 2), darkGraniteMat);
-            firePitCutout.position.set(13, 0.6, 13);
-            villaGroup.add(firePitCutout);
-
-            // Glowing Firepit Flame Source
-            const flameMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.7, 0.3, 16), new THREE.MeshBasicMaterial({ color: '#FF7A00' }));
-            flameMesh.position.set(13, 0.8, 13);
-            villaGroup.add(flameMesh);
-
-            const fireLight = new THREE.PointLight('#FF6F00', 2.5, 10);
-            fireLight.position.set(13, 1.4, 13);
-            villaGroup.add(fireLight);
-            interiorLights.push(fireLight);
-
-            // Pool Daybeds / Sun Loungers
-            for(let x = -4; x <= 0; x += 3.5) {
-                const lounger = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.4, 3.2), whiteTravertineMat);
-                lounger.position.set(x, 0.65, 8.5);
-                lounger.castShadow = true;
-                villaGroup.add(lounger);
-                
-                // Headrest Cushion
-                const cushion = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.2, 0.8), darkConcreteMat);
-                cushion.position.set(x, 0.9, 7.3);
-                villaGroup.add(cushion);
-            }
-
-            // 5. Level 1 Architecture: Grand Salon & Living Gallery
-            const l1BackWall = new THREE.Mesh(new THREE.BoxGeometry(24, 4.8, 1), darkConcreteMat);
-            l1BackWall.position.set(0, 3.0, -8);
-            l1BackWall.castShadow = true;
-            villaGroup.add(l1BackWall);
-
-            const l1SideWallL = new THREE.Mesh(new THREE.BoxGeometry(1, 4.8, 14), darkConcreteMat);
-            l1SideWallL.position.set(-11.5, 3.0, -1);
-            l1SideWallL.castShadow = true;
-            villaGroup.add(l1SideWallL);
-
-            // Floor-to-Ceiling Thermal Glass Facade
-            const l1Glass = new THREE.Mesh(new THREE.BoxGeometry(23.8, 4.6, 0.15), tintedGlassMat);
-            l1Glass.position.set(0, 3.0, 5.8);
-            villaGroup.add(l1Glass);
-
-            // Interior Living Room Furnishings (Seen through glass)
-            // Modern Designer Velvet Sectional Sofa
-            const sofa = new THREE.Mesh(new THREE.BoxGeometry(8, 0.9, 3.5), new THREE.MeshStandardMaterial({ color: '#2B2E38', roughness: 0.9 }));
-            sofa.position.set(-2, 1.2, 0);
-            sofa.castShadow = true;
-            villaGroup.add(sofa);
-
-            // Travertine Coffee Table
-            const coffeeTable = new THREE.Mesh(new THREE.BoxGeometry(4.5, 0.5, 1.8), whiteTravertineMat);
-            coffeeTable.position.set(-2, 1.0, 3);
-            coffeeTable.castShadow = true;
-            villaGroup.add(coffeeTable);
-
-            // Floating Minimalist Staircase to Level 2
-            for(let s = 0; s < 10; s++) {
-                const step = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.15, 0.8), naturalWoodMat);
-                step.position.set(7.5, 0.9 + s * 0.42, 2 - s * 0.7);
-                step.castShadow = true;
-                villaGroup.add(step);
-            }
-
-            // Backwall Glowing Architectural Art Canvas
-            const artCanvas = new THREE.Mesh(new THREE.BoxGeometry(7, 3, 0.1), glowEmissionMat);
-            artCanvas.position.set(-3, 3.5, -7.4);
-            villaGroup.add(artCanvas);
-
-            // 6. Level 2 Dramatic Cantilevered Slab & Master Balcony
-            const cantileverSlab = new THREE.Mesh(new THREE.BoxGeometry(32, 1.0, 18), whiteTravertineMat);
-            cantileverSlab.position.set(2, 5.9, 2);
-            cantileverSlab.castShadow = true;
-            cantileverSlab.receiveShadow = true;
-            villaGroup.add(cantileverSlab);
-
-            // Level 2 Master Suite Volume
-            const l2Suite = new THREE.Mesh(new THREE.BoxGeometry(20, 4.2, 13), darkGraniteMat);
-            l2Suite.position.set(4, 8.4, 2);
-            l2Suite.castShadow = true;
-            villaGroup.add(l2Suite);
-
-            // Level 2 Full-Glass Master Front
-            const l2Glass = new THREE.Mesh(new THREE.BoxGeometry(19.6, 4.0, 0.15), tintedGlassMat);
-            l2Glass.position.set(4, 8.4, 8.5);
-            villaGroup.add(l2Glass);
-
-            // Cantilever Glass Perimeter Railing
-            const balconyRailing = new THREE.Mesh(new THREE.BoxGeometry(31.6, 1.1, 0.1), tintedGlassMat);
-            balconyRailing.position.set(2, 6.95, 10.9);
-            villaGroup.add(balconyRailing);
-
-            // Architectural Vertical Louvers / Timber Slats on Master Facade
-            for(let l = -7; l <= 7; l += 1.3) {
-                const louver = new THREE.Mesh(new THREE.BoxGeometry(0.12, 4.2, 0.7), naturalWoodMat);
-                louver.position.set(l + 4, 8.4, 8.8);
-                louver.castShadow = true;
-                villaGroup.add(louver);
-            }
-
-            // 7. Rooftop Sky Deck & Architectural Pergola
-            const roofSlab = new THREE.Mesh(new THREE.BoxGeometry(24, 0.6, 15), darkConcreteMat);
-            roofSlab.position.set(4, 10.7, 2);
-            roofSlab.castShadow = true;
-            villaGroup.add(roofSlab);
-
-            // Rooftop Timber Slatted Pergola
-            for(let p = -8; p <= 8; p += 1.8) {
-                const slat = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.35, 12), naturalWoodMat);
-                slat.position.set(p + 4, 11.2, 2);
-                slat.castShadow = true;
-                villaGroup.add(slat);
-            }
-
-            // 8. Automobile Gallery / Open Carport (Underground/Level 1 wing)
-            const carportRoof = new THREE.Mesh(new THREE.BoxGeometry(12, 0.5, 10), darkConcreteMat);
-            carportRoof.position.set(-14, 3.6, 4);
-            carportRoof.castShadow = true;
-            villaGroup.add(carportRoof);
-
-            // Carport Support Brass Pillar
-            const carportPillar = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 3.6, 16), brassGoldMat);
-            carportPillar.position.set(-19, 1.8, 8);
-            carportPillar.castShadow = true;
-            villaGroup.add(carportPillar);
-
-            // Exotic Supercar Geometric Silhouette
-            const carGroup = new THREE.Group();
-            const carBody = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.75, 7.0), new THREE.MeshStandardMaterial({ color: '#090B10', roughness: 0.1, metalness: 0.95 }));
-            carBody.position.set(-14, 0.6, 4);
-            carBody.castShadow = true;
-            carGroup.add(carBody);
-
-            const carCabin = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.6, 3.5), new THREE.MeshStandardMaterial({ color: '#000000', roughness: 0.05, metalness: 0.9 }));
-            carCabin.position.set(-14, 1.15, 3.6);
-            carCabin.castShadow = true;
-            carGroup.add(carCabin);
-
-            // Red Cyber Neon Tail Light Strip
-            const tailLight = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.08, 0.08), new THREE.MeshBasicMaterial({ color: '#FF0033' }));
-            tailLight.position.set(-14, 0.7, 7.52);
-            carGroup.add(tailLight);
-            villaGroup.add(carGroup);
-
-            // 9. Architectural Landscaping (Italian Cypress Trees)
-            function createCypressTree(x, z, scale = 1) {
-                const treeGroup = new THREE.Group();
-                const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.25 * scale, 0.35 * scale, 2.5 * scale, 8), naturalWoodMat);
-                trunk.position.y = 1.25 * scale;
-                trunk.castShadow = true;
-                treeGroup.add(trunk);
-
-                const foliageGeo = new THREE.ConeGeometry(1.2 * scale, 6.5 * scale, 8);
-                const foliageMat = new THREE.MeshStandardMaterial({ color: '#102414', roughness: 0.85 });
-                const foliage = new THREE.Mesh(foliageGeo, foliageMat);
-                foliage.position.y = 4.8 * scale;
-                foliage.castShadow = true;
-                treeGroup.add(foliage);
-
-                treeGroup.position.set(x, 0, z);
-                villaGroup.add(treeGroup);
-            }
-
-            // Cluster of elegant architectural trees
-            createCypressTree(-19, -5, 1.2);
-            createCypressTree(-17, -8, 1.4);
-            createCypressTree(18, -4, 1.3);
-            createCypressTree(20, -7, 1.1);
-            createCypressTree(22, 5, 0.9);
-            createCypressTree(21, 15, 1.0);
-
-            // 10. Warm Architectural Lighting (Points of Light)
-            const salonLight = new THREE.PointLight('#FFE2A4', 3.5, 18);
-            salonLight.position.set(-2, 3.2, 1);
-            villaGroup.add(salonLight);
-            interiorLights.push(salonLight);
-
-            const masterLight = new THREE.PointLight('#FFE2A4', 4.0, 20);
-            masterLight.position.set(4, 8.8, 4);
-            villaGroup.add(masterLight);
-            interiorLights.push(masterLight);
-
-            // Pool Turquoise Glow
-            const poolLight = new THREE.PointLight('#22D3EE', 2.2, 16);
-            poolLight.position.set(2, 0.9, 13);
-            villaGroup.add(poolLight);
-
-            // Ground Landscape Bollard Accent Lights
-            for(let b = -4; b <= 4; b += 4) {
-                const bollard = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.8, 8), brassGoldMat);
-                bollard.position.set(b, 0.4, 18.5);
-                villaGroup.add(bollard);
-
-                const bGlow = new THREE.Mesh(new THREE.SphereGeometry(0.12, 8, 8), glowEmissionMat);
-                bGlow.position.set(b, 0.8, 18.5);
-                villaGroup.add(bGlow);
-
-                const bLight = new THREE.PointLight('#E6CA85', 0.8, 6);
-                bLight.position.set(b, 0.9, 18.5);
-                villaGroup.add(bLight);
-            }
+        for (let i = 0; i < numParticles; i++) {
+            particles.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                radius: Math.random() * 1.5 + 0.5,
+                speedY: Math.random() * 0.4 + 0.1,
+                speedX: (Math.random() - 0.5) * 0.2,
+                opacity: Math.random() * 0.5 + 0.2
+            });
         }
 
-        buildArchitecturalShowcase();
+        function drawParticles() {
+            pCtx.clearRect(0, 0, pWidth, pHeight);
+            for (let i = 0; i < numParticles; i++) {
+                const p = particles[i];
+                p.y -= p.speedY;
+                p.x += p.speedX;
+                if (p.y < 0) p.y = pHeight;
+                if (p.x < 0) p.x = pWidth;
+                if (p.x > pWidth) p.x = 0;
 
-        // Ambient Floating Gold Particles
-        const particlesGeo = new THREE.BufferGeometry();
-        const particlesCount = 450;
-        const posArray = new Float32Array(particlesCount * 3);
-        for(let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 60;
-        }
-        particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particlesMat = new THREE.PointsMaterial({
-            size: 0.1,
-            color: '#E6CA85',
-            transparent: true,
-            opacity: 0.55,
-            blending: THREE.AdditiveBlending
-        });
-        const particlesMesh = new THREE.Points(particlesGeo, particlesMat);
-        scene.add(particlesMesh);
-
-        // --- Camera Setup & Mouse Parallax ---
-        const cameraTarget = new THREE.Vector3(0, 4.5, 0);
-        camera.lookAt(cameraTarget);
-
-        let mouseX = 0, mouseY = 0;
-        window.addEventListener('mousemove', (e) => {
-            if (isOrbitMode) return;
-            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-        });
-
-        // Window Resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            composer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // 3D Screen Projection Coordinates for Hotspots
-        const poolWorldPos = new THREE.Vector3(2, 1.2, 13);
-        const cantileverWorldPos = new THREE.Vector3(5, 7.5, 9);
-        const roofWorldPos = new THREE.Vector3(4, 11, 2);
-
-        function updateHotspotsPosition() {
-            if (isOrbitMode) {
-                document.getElementById('hotspots-layer').style.opacity = '0';
-                return;
+                pCtx.beginPath();
+                pCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                pCtx.fillStyle = `rgba(230, 202, 133, ${p.opacity})`;
+                pCtx.fill();
             }
-            document.getElementById('hotspots-layer').style.opacity = '1';
-
-            function project(worldVec, elemId) {
-                const v = worldVec.clone().project(camera);
-                // Check if behind camera
-                if (v.z > 1) {
-                    document.getElementById(elemId).style.display = 'none';
-                    return;
-                }
-                const x = (v.x * 0.5 + 0.5) * window.innerWidth;
-                const y = (-(v.y * 0.5) + 0.5) * window.innerHeight;
-                const el = document.getElementById(elemId);
-                el.style.display = 'block';
-                el.style.left = `${x}px`;
-                el.style.top = `${y}px`;
-            }
-
-            project(poolWorldPos, 'hotspot-pool');
-            project(cantileverWorldPos, 'hotspot-cantilever');
-            project(roofWorldPos, 'hotspot-roof');
+            requestAnimationFrame(drawParticles);
         }
-
-        // Animation Render Loop
-        const clock = new THREE.Clock();
-        function animate() {
-            requestAnimationFrame(animate);
-            const elapsedTime = clock.getElapsedTime();
-
-            // Particle breathing
-            particlesMesh.rotation.y = elapsedTime * 0.015;
-            particlesMesh.position.y = Math.sin(elapsedTime * 0.3) * 0.8;
-
-            // Firepit subtle light flicker
-            interiorLights[0].intensity = 2.2 + Math.sin(elapsedTime * 12.0) * 0.4;
-
-            if (isOrbitMode) {
-                controls.update();
-            } else {
-                // Subtle gentle parallax when scrolling
-                camera.position.x += (mouseX * 0.8 - camera.position.x * 0.015) * 0.04;
-                camera.lookAt(cameraTarget);
-            }
-
-            updateHotspotsPosition();
-            composer.render();
-        }
-        animate();
-
-        // Hotspot Click to Zoom Functions
-        function zoomToFeature(feature) {
-            if (feature === 'pool') {
-                gsap.to(camera.position, { x: 2, y: 3.5, z: 22, duration: 1.8, ease: "power2.inOut" });
-                gsap.to(cameraTarget, { x: 2, y: 1.5, z: 12, duration: 1.8, ease: "power2.inOut" });
-            } else if (feature === 'cantilever') {
-                gsap.to(camera.position, { x: 16, y: 8, z: 20, duration: 1.8, ease: "power2.inOut" });
-                gsap.to(cameraTarget, { x: 4, y: 7.5, z: 4, duration: 1.8, ease: "power2.inOut" });
-            } else if (feature === 'roof') {
-                gsap.to(camera.position, { x: -14, y: 22, z: 18, duration: 1.8, ease: "power2.inOut" });
-                gsap.to(cameraTarget, { x: 2, y: 4, z: 0, duration: 1.8, ease: "power2.inOut" });
-            }
-        }
+        drawParticles();
 
         // ==========================================
-        // GSAP SCROLLTRIGGER ANIMATION PIPELINE
+        // GSAP SCROLLTRIGGER CINEMATIC ENGINE
         // ==========================================
         gsap.registerPlugin(ScrollTrigger);
 
-        // Hero Entrance
+        // Hero Load Animation
         const heroTl = gsap.timeline();
-        heroTl.to("#hero-subtitle", { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", delay: 0.3 })
+        heroTl.to("#hero-subtitle", { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", delay: 0.2 })
               .to("#hero-title", { opacity: 1, y: 0, duration: 1.1, ease: "power3.out" }, "-=0.6")
               .to("#hero-specs", { opacity: 1, duration: 0.8 }, "-=0.4")
               .to("#hero-scroll", { opacity: 1, duration: 0.8 }, "-=0.4");
 
-        // Scrollytelling Timeline
+        // Master Scrollytelling Timeline
         const scrollTl = gsap.timeline({
             scrollTrigger: {
                 trigger: "#scroll-track",
                 start: "top top",
                 end: "bottom bottom",
-                scrub: 1.2,
-                onUpdate: () => {
-                    if (isOrbitMode) toggleOrbitMode(); // Auto exit orbit mode if user scrolls page
+                scrub: 1.0,
+                onUpdate: (self) => {
+                    const prog = self.progress;
+                    updateStepIndicators(prog);
                 }
             }
         });
 
-        // Camera Transitions Across 4 Phases
-        // Phase 1: Orbit to Cantilever Terrace
-        scrollTl.to(camera.position, {
-            x: 22, y: 7.5, z: 22,
-            ease: "power1.inOut"
-        }, 0)
-        .to(cameraTarget, {
-            x: 3.5, y: 6.0, z: 2,
-            ease: "power1.inOut"
-        }, 0)
-        .to(".scene-section:nth-child(1)", { opacity: 0, duration: 0.15 }, 0)
-        .to("#card-arch", { opacity: 1, x: 0, duration: 0.3 }, 0.15)
-        .to("#card-arch", { opacity: 0, x: -60, duration: 0.2 }, 0.4);
+        // Step indicator highlights
+        function updateStepIndicators(p) {
+            const steps = [
+                { id: 'step-01', active: p < 0.25 },
+                { id: 'step-02', active: p >= 0.25 && p < 0.55 },
+                { id: 'step-03', active: p >= 0.55 && p < 0.82 },
+                { id: 'step-04', active: p >= 0.82 }
+            ];
+            steps.forEach(s => {
+                const el = document.getElementById(s.id);
+                if (s.active) {
+                    el.classList.add('text-champagne', 'font-bold');
+                    el.classList.remove('text-white/40');
+                } else {
+                    el.classList.remove('text-champagne', 'font-bold');
+                    el.classList.add('text-white/40');
+                }
+            });
+        }
 
-        // Phase 2: Glide into Inner Living Gallery
-        scrollTl.to(camera.position, {
-            x: -10, y: 7.0, z: 15,
-            ease: "power1.inOut"
-        }, 0.4)
-        .to(cameraTarget, {
-            x: 0, y: 4.5, z: 1,
-            ease: "power1.inOut"
-        }, 0.4)
-        .to("#card-interior", { opacity: 1, x: 0, duration: 0.3 }, 0.48)
-        .to("#card-interior", { opacity: 0, x: 60, duration: 0.2 }, 0.72);
+        // Quick Jump to Scene
+        function jumpToScene(index) {
+            const track = document.getElementById('scroll-track');
+            const targetY = track.offsetTop + (track.offsetHeight * (index / 3.5));
+            window.scrollTo({ top: targetY, behavior: 'smooth' });
+        }
 
-        // Phase 3: Elevate into Sunset Sky Deck & Horizon
-        scrollTl.to(camera.position, {
-            x: -18, y: 26, z: 22,
-            ease: "power1.inOut"
-        }, 0.72)
-        .to(cameraTarget, {
-            x: 2, y: 4.0, z: 0,
-            ease: "power1.inOut"
-        }, 0.72)
-        .to("#card-roof", { opacity: 1, y: 0, duration: 0.28 }, 0.78);
+        // --- SCROLL ANIMATIONS (KEN BURNS EFFECT + SEAMLESS CROSS-FADES) ---
+        // 0.0 -> 0.35: Fade Out Hero Text & Zoom Exterior
+        scrollTl.to("#layer-hero", { scale: 1.12, ease: "none" }, 0)
+                .to("#content-hero", { opacity: 0, y: -40, duration: 0.15 }, 0.05);
+
+        // 0.20 -> 0.50: Cross-fade to Scene 2 (Cantilever Terrace & Lagoon)
+        scrollTl.to("#layer-arch", { opacity: 1, scale: 1.1, ease: "none", duration: 0.3 }, 0.2)
+                .to("#content-arch", { opacity: 1, duration: 0.15 }, 0.25)
+                .to("#card-arch-inner", { x: 0, ease: "power2.out", duration: 0.2 }, 0.25)
+                .to("#content-arch", { opacity: 0, duration: 0.15 }, 0.48);
+
+        // 0.48 -> 0.78: Cross-fade to Scene 3 (Italian Sanctuary Interior)
+        scrollTl.to("#layer-interior", { opacity: 1, scale: 1.1, ease: "none", duration: 0.3 }, 0.48)
+                .to("#content-interior", { opacity: 1, duration: 0.15 }, 0.52)
+                .to("#card-interior-inner", { x: 0, ease: "power2.out", duration: 0.2 }, 0.52)
+                .to("#content-interior", { opacity: 0, duration: 0.15 }, 0.76);
+
+        // 0.75 -> 1.00: Cross-fade to Scene 4 (Rooftop Sunset Horizon)
+        scrollTl.to("#layer-roof", { opacity: 1, scale: 1.08, ease: "none", duration: 0.3 }, 0.75)
+                .to("#content-roof", { opacity: 1, duration: 0.15 }, 0.78)
+                .to("#card-roof-inner", { y: 0, ease: "power2.out", duration: 0.2 }, 0.78);
 
         // ==========================================
         // ACQUISITION / MORTGAGE CALCULATOR
