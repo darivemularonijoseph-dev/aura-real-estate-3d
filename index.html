@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE AURA RESIDENCES | Luxury 3D Architectural Showcase</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#08090C',
+                        slate: '#0F1218',
+                        gold: '#D4AF37',
+                        champagne: '#E2C285',
+                        ice: '#A5C9CA'
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- GSAP & ScrollTrigger CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            background-color: #08090C;
+            color: #ffffff;
+            overflow-x: hidden;
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 7px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #08090C;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1a202c;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+
+        .glass-panel {
+            background: rgba(15, 18, 24, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .glass-badge {
+            background: rgba(226, 194, 133, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 194, 133, 0.25);
+        }
+
+        .text-gradient-gold {
+            background: linear-gradient(135deg, #FFF1D0 0%, #D4AF37 50%, #AA820A 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -3px;
+            left: 0;
+            background-color: #D4AF37;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #D4AF37;
+            cursor: pointer;
+            margin-top: -7px;
+            box-shadow: 0 0 14px rgba(212, 175, 55, 0.6);
+            border: 2px solid #08090C;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-gold selection:text-obsidian">
+
+    <!-- Fixed Header Navigation -->
+    <header class="fixed top-0 w-full z-50 px-6 md:px-12 py-5 flex justify-between items-center bg-gradient-to-b from-black/80 via-black/40 to-transparent">
+        <a href="#" class="font-serif text-2xl md:text-3xl tracking-[0.25em] font-bold text-white flex items-center gap-2">
+            <span>AURA</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-gold inline-block"></span>
+        </a>
+        <div class="hidden md:flex gap-10 text-xs tracking-[0.25em] uppercase text-white/80">
+            <a href="#residence" class="nav-link hover:text-champagne transition-colors">Residence</a>
+            <a href="#amenities" class="nav-link hover:text-champagne transition-colors">Curated Amenities</a>
+            <a href="#investment" class="nav-link hover:text-champagne transition-colors">Acquisition</a>
+            <a href="#inquire" class="nav-link hover:text-champagne transition-colors">VIP Inquire</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="#inquire" class="hidden sm:inline-flex px-5 py-2 rounded-full text-xs uppercase tracking-widest bg-white/10 hover:bg-gold hover:text-obsidian transition-all border border-white/20">
+                Book VIP Tour
+            </a>
+            <button id="mobile-menu-btn" class="md:hidden text-white p-2">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-obsidian/95 backdrop-blur-2xl z-40 flex flex-col justify-center items-center gap-8 text-lg uppercase tracking-[0.25em] hidden transition-all">
+        <a href="#residence" class="mobile-link text-white/80 hover:text-gold">Residence</a>
+        <a href="#amenities" class="mobile-link text-white/80 hover:text-gold">Amenities</a>
+        <a href="#investment" class="mobile-link text-white/80 hover:text-gold">Acquisition</a>
+        <a href="#inquire" class="mobile-link text-white/80 hover:text-gold">VIP Inquire</a>
+        <button id="close-menu-btn" class="absolute top-7 right-7 text-white/60 hover:text-white">
+            <i data-lucide="x" class="w-7 h-7"></i>
+        </button>
+    </div>
+
+    <!-- 3D Canvas Background -->
+    <canvas id="webgl-canvas" class="fixed inset-0 w-full h-full z-0 pointer-events-none"></canvas>
+
+    <!-- Scrollytelling 3D Experience Track -->
+    <div id="scroll-track" class="relative w-full z-10" style="height: 400vh;">
+        
+        <!-- Scene 1: Hero -->
+        <section class="scene-section sticky top-0 h-screen w-full flex flex-col justify-center items-center px-6 pointer-events-none">
+            <div class="text-center mt-12 max-w-4xl">
+                <div class="inline-block glass-badge px-5 py-1.5 rounded-full text-champagne tracking-[0.35em] text-xs uppercase mb-6 opacity-0 translate-y-4" id="hero-subtitle">
+                    Architectural Masterpiece • Jubilee Hills
+                </div>
+                <h1 class="font-serif text-5xl md:text-8xl lg:text-9xl font-bold text-white mb-6 tracking-tight opacity-0 translate-y-8" id="hero-title">
+                    THE AURA
+                </h1>
+                
+                <div class="glass-panel inline-flex flex-wrap justify-center items-center gap-3 md:gap-7 px-6 py-3.5 rounded-full text-xs md:text-sm tracking-widest uppercase text-white/90 opacity-0" id="hero-specs">
+                    <span>8,800 SQ FT</span>
+                    <span class="text-gold">•</span>
+                    <span>5 Master Suites</span>
+                    <span class="text-gold">•</span>
+                    <span>Infinity Horizon Pool</span>
+                    <span class="text-gold">•</span>
+                    <span class="text-gradient-gold font-bold text-sm md:text-base">$14.2M</span>
+                </div>
+            </div>
+            
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-0 cursor-pointer pointer-events-auto" id="hero-scroll" onclick="window.scrollTo({top: window.innerHeight * 0.9, behavior: 'smooth'})">
+                <span class="text-[10px] tracking-[0.3em] uppercase text-white/50 hover:text-champagne transition-colors">Scroll to Explore</span>
+                <div class="w-[1px] h-10 bg-gradient-to-b from-champagne to-transparent animate-pulse"></div>
+            </div>
+        </section>
+
+        <!-- Scene 2: Cantilever Architecture -->
+        <section class="scene-section absolute top-[100vh] h-screen w-full flex items-center px-6 md:px-20 pointer-events-none">
+            <div class="glass-panel p-8 md:p-12 rounded-3xl max-w-xl opacity-0 translate-x-[-60px] pointer-events-auto" id="card-arch">
+                <div class="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center mb-6 border border-gold/30">
+                    <i data-lucide="layers" class="text-champagne w-6 h-6"></i>
+                </div>
+                <p class="text-champagne uppercase tracking-[0.25em] text-xs font-semibold mb-2">Phase I • Structural Form</p>
+                <h2 class="font-serif text-3xl md:text-4xl mb-4 text-white font-medium">Cantilevered Horizon</h2>
+                <p class="text-white/70 leading-relaxed font-light text-sm md:text-base mb-6">
+                    Frameless floor-to-ceiling thermal glass with automated climate modulation. Floating concrete volumes balance weightlessly above reflective waters, seamlessly uniting interior elegance with panoramic skyline views.
+                </p>
+                <div class="flex items-center gap-6 text-xs tracking-wider uppercase text-champagne/90">
+                    <div><span class="font-bold text-white text-base">3.4m</span> Ceiling Height</div>
+                    <div class="w-[1px] h-4 bg-white/20"></div>
+                    <div><span class="font-bold text-white text-base">Triple</span> Glazed Thermal Glass</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scene 3: The Sanctuary & Interior -->
+        <section class="scene-section absolute top-[200vh] h-screen w-full flex items-center justify-end px-6 md:px-20 pointer-events-none">
+            <div class="glass-panel p-8 md:p-12 rounded-3xl max-w-xl opacity-0 translate-x-[60px] pointer-events-auto" id="card-interior">
+                <div class="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center mb-6 border border-gold/30">
+                    <i data-lucide="sparkles" class="text-champagne w-6 h-6"></i>
+                </div>
+                <p class="text-champagne uppercase tracking-[0.25em] text-xs font-semibold mb-2">Phase II • Living Art</p>
+                <h2 class="font-serif text-3xl md:text-4xl mb-4 text-white font-medium">The Inner Sanctuary</h2>
+                <p class="text-white/70 leading-relaxed font-light text-sm md:text-base mb-6">
+                    Hand-selected Italian Travertine and polished Calacatta Gold marble crafted by master European stonemasons. Warm architectural cove lighting highlights natural textures to compose an effortless retreat of calm.
+                </p>
+                <div class="flex items-center gap-6 text-xs tracking-wider uppercase text-champagne/90">
+                    <div><span class="font-bold text-white text-base">Bookmatched</span> Italian Slabs</div>
+                    <div class="w-[1px] h-4 bg-white/20"></div>
+                    <div><span class="font-bold text-white text-base">Smart</span> Acoustic Isolation</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scene 4: Sky Deck & Skyline -->
+        <section class="scene-section absolute top-[300vh] h-screen w-full flex items-start justify-center pt-28 px-6 pointer-events-none">
+            <div class="glass-panel p-8 md:p-12 rounded-3xl max-w-2xl text-center opacity-0 translate-y-[-60px] pointer-events-auto" id="card-roof">
+                <div class="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center mx-auto mb-5 border border-gold/30">
+                    <i data-lucide="sun" class="text-champagne w-6 h-6"></i>
+                </div>
+                <p class="text-champagne uppercase tracking-[0.25em] text-xs font-semibold mb-2">Phase III • Sky Deck</p>
+                <h2 class="font-serif text-3xl md:text-5xl mb-4 text-white font-medium">Private Sunset Observatory</h2>
+                <p class="text-white/70 leading-relaxed font-light text-sm md:text-base max-w-lg mx-auto mb-6">
+                    360° unobstructed horizon panoramas accompanied by a bespoke outdoor fire lounge, sub-zero bar, and private rooftop star observatory.
+                </p>
+                <a href="#inquire" class="inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs uppercase tracking-widest bg-gold text-obsidian font-semibold hover:bg-champagne transition-all shadow-lg shadow-gold/20">
+                    Schedule Private Showing <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Main Content Section Below 3D Showcase -->
+    <main class="relative z-20 bg-obsidian w-full" id="residence">
+        
+        <!-- Smooth Dark Gradient Transition -->
+        <div class="h-32 w-full bg-gradient-to-b from-transparent via-obsidian/80 to-obsidian absolute top-[-8rem] left-0 pointer-events-none"></div>
+
+        <!-- Bento Grid Curated Amenities -->
+        <section class="py-24 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto" id="amenities">
+            <div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                    <h3 class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 font-semibold">Curated Lifestyle</h3>
+                    <h2 class="font-serif text-4xl md:text-5xl text-white">Uncompromising Amenities</h2>
+                </div>
+                <p class="text-white/50 text-sm max-w-md font-light">
+                    Every element is meticulously engineered to deliver an uncompromising balance of aesthetic beauty, biometric privacy, and refined comfort.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[280px]">
+                <!-- Bento Card 1 -->
+                <div class="glass-panel rounded-3xl p-8 flex flex-col justify-end relative overflow-hidden group md:col-span-2">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10"></div>
+                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700"></div>
+                    <div class="relative z-20">
+                        <i data-lucide="cpu" class="text-champagne mb-3 w-8 h-8"></i>
+                        <h4 class="text-2xl font-serif text-white mb-2">Smart Home AI Integration</h4>
+                        <p class="text-white/70 text-sm font-light max-w-lg">Centralized Lutron lighting matrices, facial-recognition biometric access portals, and AI climate tuning adapting to resident circadian rhythms.</p>
+                    </div>
+                </div>
+
+                <!-- Bento Card 2 -->
+                <div class="glass-panel rounded-3xl p-8 flex flex-col justify-end relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10"></div>
+                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700"></div>
+                    <div class="relative z-20">
+                        <i data-lucide="waves" class="text-champagne mb-3 w-8 h-8"></i>
+                        <h4 class="text-2xl font-serif text-white mb-2">Vitality Spa & Pool</h4>
+                        <p class="text-white/70 text-sm font-light">Oxygenated thermal hydro-jet pool with Finnish cedar dry sauna.</p>
+                    </div>
+                </div>
+
+                <!-- Bento Card 3 -->
+                <div class="glass-panel rounded-3xl p-8 flex flex-col justify-end relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10"></div>
+                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700"></div>
+                    <div class="relative z-20">
+                        <i data-lucide="shield-check" class="text-champagne mb-3 w-8 h-8"></i>
+                        <h4 class="text-2xl font-serif text-white mb-2">Automobile Gallery</h4>
+                        <p class="text-white/70 text-sm font-light">6-Vehicle climate-controlled gallery with turntable display and dual 22kW ultra-chargers.</p>
+                    </div>
+                </div>
+
+                <!-- Bento Card 4 -->
+                <div class="glass-panel rounded-3xl p-8 flex flex-col justify-end relative overflow-hidden group md:col-span-2">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10"></div>
+                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700"></div>
+                    <div class="relative z-20">
+                        <i data-lucide="wine" class="text-champagne mb-3 w-8 h-8"></i>
+                        <h4 class="text-2xl font-serif text-white mb-2">Sommelier Cellar & Tasting Lounge</h4>
+                        <p class="text-white/70 text-sm font-light max-w-lg">1,200 bottle humidity-stabilized European oak cellar with integrated biometric tasting vault and cigar humidor.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Acquisition & Mortgage Calculator -->
+        <section class="py-24 bg-slate/90 border-y border-white/5 relative overflow-hidden" id="investment">
+            <div class="max-w-6xl mx-auto px-6 flex flex-col lg:flex-row gap-16 items-center">
+                <div class="w-full lg:w-1/2">
+                    <div class="inline-block glass-badge px-4 py-1.5 rounded-full text-champagne tracking-[0.3em] text-xs uppercase mb-3">
+                        Financial Modelling
+                    </div>
+                    <h2 class="font-serif text-3xl md:text-5xl text-white mb-6">Acquisition Calculator</h2>
+                    <p class="text-white/60 font-light mb-8 text-sm md:text-base leading-relaxed">
+                        Customize your private financing framework for The Aura. Calculations assume prime private banking underwriting and jumbo credit facilities.
+                    </p>
+                    
+                    <div class="space-y-7">
+                        <div>
+                            <div class="flex justify-between text-xs uppercase tracking-wider mb-2">
+                                <span class="text-white/70">Down Payment Ratio</span>
+                                <span class="text-gold font-semibold" id="dp-val">25% ($3,550,000)</span>
+                            </div>
+                            <input type="range" id="dp-slider" min="10" max="60" value="25" step="5">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs uppercase tracking-wider mb-2">
+                                <span class="text-white/70">Loan Amortization Term</span>
+                                <span class="text-gold font-semibold" id="term-val">30 Years</span>
+                            </div>
+                            <input type="range" id="term-slider" min="10" max="30" value="30" step="5">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs uppercase tracking-wider mb-2">
+                                <span class="text-white/70">Private Interest Rate</span>
+                                <span class="text-gold font-semibold" id="rate-val">5.5%</span>
+                            </div>
+                            <input type="range" id="rate-slider" min="3.0" max="8.0" value="5.5" step="0.1">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="w-full lg:w-1/2">
+                    <div class="glass-panel p-10 md:p-14 rounded-3xl text-center relative overflow-hidden border border-white/10">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-champagne to-transparent"></div>
+                        <p class="text-white/60 text-xs uppercase tracking-[0.25em] mb-4">Estimated Principal & Interest</p>
+                        <div class="font-serif text-5xl md:text-7xl text-gradient-gold font-bold mb-3" id="monthly-payment">$60,468</div>
+                        <p class="text-white/40 text-xs tracking-wider uppercase mb-8">Monthly Private Facility Schedule</p>
+                        
+                        <div class="pt-6 border-t border-white/10 grid grid-cols-2 gap-4 text-left">
+                            <div>
+                                <p class="text-white/40 text-[10px] uppercase tracking-widest">Base Valuation</p>
+                                <p class="text-white font-serif text-lg font-semibold">$14,200,000</p>
+                            </div>
+                            <div>
+                                <p class="text-white/40 text-[10px] uppercase tracking-widest">Est. Loan Amount</p>
+                                <p class="text-white font-serif text-lg font-semibold" id="loan-amount">$10,650,000</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIP Concierge & Inquiry -->
+        <section class="py-32 px-6 relative overflow-hidden" id="inquire">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gold/5 rounded-full blur-[140px] pointer-events-none"></div>
+            
+            <div class="max-w-3xl mx-auto text-center relative z-10">
+                <div class="w-14 h-14 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center mx-auto mb-6">
+                    <i data-lucide="key-round" class="text-champagne w-6 h-6"></i>
+                </div>
+                <h2 class="font-serif text-4xl md:text-6xl text-white mb-6 font-medium">Arrange Private Viewing</h2>
+                <p class="text-white/60 font-light mb-12 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+                    Entry to The Aura is strictly confidential and by curated appointment. Connect directly with our asset concierge to reserve an exclusive walk-through.
+                </p>
+                
+                <form id="inquiry-form" class="space-y-4 mb-8 text-left">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" id="name-input" required placeholder="Full Name" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:border-champagne transition-colors text-sm">
+                        <input type="email" id="email-input" required placeholder="Confidential Email" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:border-champagne transition-colors text-sm">
+                    </div>
+                    <input type="tel" id="phone-input" required placeholder="Phone / WhatsApp (+91 or International)" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:border-champagne transition-colors text-sm">
+                    
+                    <button type="submit" class="w-full bg-gradient-to-r from-champagne via-gold to-champagne text-obsidian font-semibold py-4 rounded-xl hover:opacity-95 transition-all uppercase tracking-[0.2em] text-xs shadow-xl shadow-gold/20">
+                        Submit Confidential Inquiry
+                    </button>
+                </form>
+
+                <div class="flex items-center justify-center gap-4 my-6">
+                    <div class="h-[1px] w-14 bg-white/10"></div>
+                    <span class="text-white/30 text-[10px] uppercase tracking-widest">Instant Concierge</span>
+                    <div class="h-[1px] w-14 bg-white/10"></div>
+                </div>
+
+                <a href="https://wa.me/?text=Hello%2C%20I%20would%20like%20to%20request%20a%20confidential%20viewing%20of%20The%20Aura%20Residences." target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-3 w-full md:w-auto bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/30 py-3.5 px-8 rounded-xl hover:bg-[#25D366]/20 transition-colors text-xs uppercase tracking-widest font-medium">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    <span>Connect on WhatsApp</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="border-t border-white/10 py-10 text-center text-white/30 text-[11px] tracking-[0.25em] uppercase">
+            <p>&copy; 2026 The Aura Luxury Residences. Architectural Rights Reserved.</p>
+        </footer>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="modal-success" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl flex items-center justify-center p-6 hidden">
+        <div class="glass-panel p-10 rounded-3xl max-w-md text-center border border-gold/40 relative">
+            <i data-lucide="check-circle" class="w-14 h-14 text-gold mx-auto mb-5"></i>
+            <h3 class="font-serif text-3xl text-white mb-3">Inquiry Received</h3>
+            <p class="text-white/70 text-sm font-light mb-6">Our senior asset manager will contact you within 2 business hours through your confidential contact.</p>
+            <button id="modal-close-btn" class="px-8 py-3 rounded-full bg-gold text-obsidian uppercase tracking-widest text-xs font-semibold">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Menu Toggling
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu() {
+            mobileMenu.classList.toggle('hidden');
+        }
+        mobileMenuBtn.addEventListener('click', toggleMenu);
+        closeMenuBtn.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+
+        // Form Submission Modal
+        const inquiryForm = document.getElementById('inquiry-form');
+        const modalSuccess = document.getElementById('modal-success');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+
+        inquiryForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            modalSuccess.classList.remove('hidden');
+            inquiryForm.reset();
+        });
+        modalCloseBtn.addEventListener('click', () => {
+            modalSuccess.classList.add('hidden');
+        });
+
+        // ==========================================
+        // THREE.JS ARCHITECTURAL 3D EXPERIENCE
+        // ==========================================
+        const canvas = document.querySelector('#webgl-canvas');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color('#08090C');
+        scene.fog = new THREE.FogExp2('#08090C', 0.018);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.35;
+
+        // --- Lights ---
+        const ambientLight = new THREE.AmbientLight('#ffffff', 0.2);
+        scene.add(ambientLight);
+
+        // Directional Moonlight / Architectural Spot
+        const moonLight = new THREE.DirectionalLight('#A5C9CA', 1.0);
+        moonLight.position.set(-25, 35, 20);
+        moonLight.castShadow = true;
+        moonLight.shadow.mapSize.width = 2048;
+        moonLight.shadow.mapSize.height = 2048;
+        scene.add(moonLight);
+
+        const fillLight = new THREE.DirectionalLight('#E2C285', 0.4);
+        fillLight.position.set(20, 10, -20);
+        scene.add(fillLight);
+
+        // --- Procedural Luxury Villa Construction ---
+        const villaGroup = new THREE.Group();
+        scene.add(villaGroup);
+
+        const concreteMat = new THREE.MeshStandardMaterial({ 
+            color: '#1a1d24', 
+            roughness: 0.85, 
+            metalness: 0.15 
+        });
+        
+        const marbleMat = new THREE.MeshStandardMaterial({
+            color: '#282c37',
+            roughness: 0.25,
+            metalness: 0.3
+        });
+
+        const woodLouverMat = new THREE.MeshStandardMaterial({
+            color: '#3d2b1d',
+            roughness: 0.6,
+            metalness: 0.1
+        });
+
+        const glassMat = new THREE.MeshPhysicalMaterial({
+            color: '#ffffff',
+            metalness: 0.1,
+            roughness: 0.05,
+            transmission: 0.92,
+            ior: 1.5,
+            thickness: 0.6,
+            transparent: true,
+            opacity: 1
+        });
+
+        const waterMat = new THREE.MeshStandardMaterial({
+            color: '#072436',
+            roughness: 0.08,
+            metalness: 0.9
+        });
+
+        const goldAccentMat = new THREE.MeshStandardMaterial({
+            color: '#D4AF37',
+            roughness: 0.3,
+            metalness: 0.8
+        });
+
+        function createLuxuryVilla() {
+            // Ground Plane
+            const groundGeo = new THREE.PlaneGeometry(120, 120);
+            const groundMat = new THREE.MeshStandardMaterial({ color: '#05070a', roughness: 0.95 });
+            const ground = new THREE.Mesh(groundGeo, groundMat);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -0.5;
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            // Villa Podium Foundation
+            const base = new THREE.Mesh(new THREE.BoxGeometry(26, 1, 18), concreteMat);
+            base.position.y = 0;
+            base.castShadow = true;
+            base.receiveShadow = true;
+            villaGroup.add(base);
+
+            // Reflection Infinity Pool
+            const pool = new THREE.Mesh(new THREE.BoxGeometry(14, 0.7, 9), waterMat);
+            pool.position.set(0, 0.15, 12.5);
+            pool.receiveShadow = true;
+            villaGroup.add(pool);
+
+            // Pool Gold Edge Trim
+            const poolTrim = new THREE.Mesh(new THREE.BoxGeometry(14.4, 0.2, 9.4), goldAccentMat);
+            poolTrim.position.set(0, 0.25, 12.5);
+            villaGroup.add(poolTrim);
+
+            // Level 1 Concrete Core
+            const l1Core = new THREE.Mesh(new THREE.BoxGeometry(19, 4.2, 13), concreteMat);
+            l1Core.position.set(0, 2.6, 0);
+            l1Core.castShadow = true;
+            l1Core.receiveShadow = true;
+            villaGroup.add(l1Core);
+
+            // Level 1 Panoramic Glass Walls
+            const l1GlassFront = new THREE.Mesh(new THREE.BoxGeometry(18.6, 4.0, 0.2), glassMat);
+            l1GlassFront.position.set(0, 2.6, 6.55);
+            villaGroup.add(l1GlassFront);
+
+            // Level 2 Dramatic Cantilevered Slab
+            const l2Slab = new THREE.Mesh(new THREE.BoxGeometry(28, 0.9, 15), marbleMat);
+            l2Slab.position.set(2.5, 5.15, 2.5);
+            l2Slab.castShadow = true;
+            villaGroup.add(l2Slab);
+
+            // Level 2 Living Suite Core
+            const l2Core = new THREE.Mesh(new THREE.BoxGeometry(17, 3.8, 11), concreteMat);
+            l2Core.position.set(4.5, 7.5, 2.5);
+            l2Core.castShadow = true;
+            villaGroup.add(l2Core);
+
+            // Level 2 Floor-to-Ceiling Glass Enclosure
+            const l2Glass = new THREE.Mesh(new THREE.BoxGeometry(16.6, 3.6, 11.2), glassMat);
+            l2Glass.position.set(4.5, 7.5, 2.5);
+            villaGroup.add(l2Glass);
+
+            // Architectural Wooden Louver Slats (Facade Detail)
+            for(let i = -6; i <= 6; i += 1.2) {
+                const louver = new THREE.Mesh(new THREE.BoxGeometry(0.15, 3.6, 0.5), woodLouverMat);
+                louver.position.set(i + 4.5, 7.5, 8.2);
+                villaGroup.add(louver);
+            }
+
+            // Floating Roof Canopy
+            const roofSlab = new THREE.Mesh(new THREE.BoxGeometry(22, 0.6, 13), concreteMat);
+            roofSlab.position.set(4.5, 9.7, 2.5);
+            roofSlab.castShadow = true;
+            villaGroup.add(roofSlab);
+
+            // Warm Architectural Interior Lighting
+            const intLight1 = new THREE.PointLight('#E2C285', 2.8, 18);
+            intLight1.position.set(0, 2.8, 3);
+            villaGroup.add(intLight1);
+
+            const intLight2 = new THREE.PointLight('#E2C285', 3.2, 18);
+            intLight2.position.set(4.5, 7.5, 2.5);
+            villaGroup.add(intLight2);
+            
+            // Pool Underwater Glow
+            const poolLight = new THREE.PointLight('#A5C9CA', 1.8, 12);
+            poolLight.position.set(0, 0.8, 12.5);
+            villaGroup.add(poolLight);
+        }
+
+        createLuxuryVilla();
+
+        // Ambient Floating Light Motes
+        const particlesGeo = new THREE.BufferGeometry();
+        const particlesCount = 400;
+        const posArray = new Float32Array(particlesCount * 3);
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 50;
+        }
+        particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMat = new THREE.PointsMaterial({
+            size: 0.08,
+            color: '#E2C285',
+            transparent: true,
+            opacity: 0.5,
+            blending: THREE.AdditiveBlending
+        });
+        const particlesMesh = new THREE.Points(particlesGeo, particlesMat);
+        scene.add(particlesMesh);
+
+        // --- Camera & Mouse Parallax Setup ---
+        const cameraTarget = new THREE.Vector3(0, 4, 0);
+        camera.position.set(0, 3, 34);
+        camera.lookAt(cameraTarget);
+
+        let mouseX = 0, mouseY = 0;
+        window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 1.5;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 1.5;
+        });
+
+        // Window Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Animation Render Loop
+        const clock = new THREE.Clock();
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            // Floating dust motes
+            particlesMesh.rotation.y = elapsedTime * 0.015;
+            particlesMesh.position.y = Math.sin(elapsedTime * 0.4) * 0.6;
+
+            // Gentle pool water breathing
+            villaGroup.children[1].position.y = 0.15 + Math.sin(elapsedTime * 1.5) * 0.03;
+
+            // Soft mouse parallax
+            camera.position.x += (mouseX - camera.position.x * 0.02) * 0.05;
+            camera.lookAt(cameraTarget);
+            
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // ==========================================
+        // GSAP SCROLLTRIGGER ANIMATION PIPELINE
+        // ==========================================
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero Entrance Timeline
+        const heroTl = gsap.timeline();
+        heroTl.to("#hero-subtitle", { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", delay: 0.3 })
+              .to("#hero-title", { opacity: 1, y: 0, duration: 1.1, ease: "power3.out" }, "-=0.6")
+              .to("#hero-specs", { opacity: 1, duration: 0.8 }, "-=0.4")
+              .to("#hero-scroll", { opacity: 1, duration: 0.8 }, "-=0.4");
+
+        // Scrollytelling Timeline Bound to #scroll-track
+        const scrollTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#scroll-track",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1.2,
+            }
+        });
+
+        // Camera Transitions
+        // Scene 1 -> Scene 2 (Cantilever Close-up)
+        scrollTl.to(camera.position, {
+            x: 18, y: 6.5, z: 22,
+            ease: "power1.inOut"
+        }, 0)
+        .to(cameraTarget, {
+            x: 3, y: 5.5, z: 2,
+            ease: "power1.inOut"
+        }, 0)
+        .to(".scene-section:nth-child(1)", { opacity: 0, duration: 0.15 }, 0)
+        .to("#card-arch", { opacity: 1, x: 0, duration: 0.3 }, 0.15)
+        .to("#card-arch", { opacity: 0, x: -60, duration: 0.2 }, 0.4);
+
+        // Scene 2 -> Scene 3 (Interior Living Focus)
+        scrollTl.to(camera.position, {
+            x: -8, y: 8, z: 14,
+            ease: "power1.inOut"
+        }, 0.4)
+        .to(cameraTarget, {
+            x: 4.5, y: 7.5, z: 2.5,
+            ease: "power1.inOut"
+        }, 0.4)
+        .to("#card-interior", { opacity: 1, x: 0, duration: 0.3 }, 0.48)
+        .to("#card-interior", { opacity: 0, x: 60, duration: 0.2 }, 0.72);
+
+        // Scene 3 -> Scene 4 (Sunset Sky Deck Aerial)
+        scrollTl.to(camera.position, {
+            x: -16, y: 24, z: 18,
+            ease: "power1.inOut"
+        }, 0.72)
+        .to(cameraTarget, {
+            x: 0, y: 3, z: 0,
+            ease: "power1.inOut"
+        }, 0.72)
+        .to("#card-roof", { opacity: 1, y: 0, duration: 0.28 }, 0.78);
+
+        // ==========================================
+        // ACQUISITION / MORTGAGE CALCULATOR
+        // ==========================================
+        const basePrice = 14200000;
+        const dpSlider = document.getElementById('dp-slider');
+        const termSlider = document.getElementById('term-slider');
+        const rateSlider = document.getElementById('rate-slider');
+        
+        const dpVal = document.getElementById('dp-val');
+        const termVal = document.getElementById('term-val');
+        const rateVal = document.getElementById('rate-val');
+        const monthlyPayment = document.getElementById('monthly-payment');
+        const loanAmountDisplay = document.getElementById('loan-amount');
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(num);
+        }
+
+        function updateMortgage() {
+            const dpPercent = parseFloat(dpSlider.value);
+            const years = parseFloat(termSlider.value);
+            const rate = parseFloat(rateSlider.value);
+
+            const downPayment = basePrice * (dpPercent / 100);
+            const principal = basePrice - downPayment;
+            
+            const monthlyRate = (rate / 100) / 12;
+            const payments = years * 12;
+
+            let monthly = 0;
+            if (monthlyRate === 0) {
+                monthly = principal / payments;
+            } else {
+                monthly = principal * (monthlyRate * Math.pow(1 + monthlyRate, payments)) / (Math.pow(1 + monthlyRate, payments) - 1);
+            }
+
+            dpVal.innerText = `${dpPercent}% (${formatCurrency(downPayment)})`;
+            termVal.innerText = `${years} Years`;
+            rateVal.innerText = `${rate.toFixed(1)}%`;
+            monthlyPayment.innerText = formatCurrency(monthly);
+            loanAmountDisplay.innerText = formatCurrency(principal);
+        }
+
+        dpSlider.addEventListener('input', updateMortgage);
+        termSlider.addEventListener('input', updateMortgage);
+        rateSlider.addEventListener('input', updateMortgage);
+        updateMortgage();
+    </script>
+</body>
+</html>
